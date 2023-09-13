@@ -1,0 +1,17 @@
+
+
+<div>
+    <h1> Hello <%= name %>
+    </h1>
+</div>
+<form action="/logout?_method=DELETE" method="POST" >
+    <button type="submit" >Logout</button>
+</form>
+
+<a href="/userdashboard">Go to User Dashboard</a>
+
+<form action="/request-book" method="POST">
+    <label for="bookTitle">Book Title:</label>
+    <input type="text" id="bookTitle" name="bookTitle" required>
+    <button type="submit">Request to Borrow</button>
+</form>

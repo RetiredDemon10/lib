@@ -1,0 +1,49 @@
+
+// ...
+
+// configuring register post functionality
+app.post('/register', checkNotAuthenticated, (req, res) => {
+  const { name, email, password } = req.body;
+
+  bcrypt.hash(password, 10, (err, hashedPassword) => {
+    if (err) {
+      console.error(err);
+      res.redirect('/register');
+    } else {
+      const user = {
+        name: name,
+        email: email,
+        password: hashedPassword,
+      };
+
+      con.query('INSERT INTO users SET ?', user, (err, result) => {
+        if (err) {
+          console.error(err);
+          res.redirect('/register');
+        } else {
+          console.log('User registered:', result);
+          res.redirect('/login');
+        }
+      });
+    }
+  });
+});
+
+// Update the passport authentication function to fetch user from the database
+initializePassport(
+  passport,
+  email => {
+    con.query('SELECT * FROM users WHERE email = ?', [email], (err, rows) => {
+      if (err) throw err;
+      return rows[0]; // Assuming the first row is the user with the given email
+    });
+  },
+  id => {
+    con.query('SELECT * FROM users WHERE id = ?', [id], (err, rows) => {
+      if (err) throw err;
+      return rows[0]; // Assuming the first row is the user with the given ID
+    });
+  }
+);
+
+// ...
